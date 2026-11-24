@@ -66,7 +66,7 @@ def _save_token(creds: Credentials, token_path: Path) -> None:
     token_path.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
     token_path.write_text(creds.to_json())
     os.chmod(token_path, 0o600)
-    log.info("Saved refreshed token to GOOGLE_PRIVATE_DIR")
+    log.info("Saved token to GOOGLE_PRIVATE_DIR")
 
 
 _creds: Credentials | None = None

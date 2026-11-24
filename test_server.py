@@ -1,6 +1,5 @@
 """Smoke test: start the server over stdio, list its tools, call list_events.
 
-list_events takes start/end, so days_ahead is converted to a range from now.
 Read-only: nothing is created, sent or deleted.
 """
 
