@@ -2,6 +2,8 @@
 
 The real prompts used in this assignment, in order.
 
+Prompts 01-06 were copied from the session at the end of the work; from 07 on, prompts are saved as they are sent.
+
 | # | File | Prompt (short) | Result |
 |---|---|---|---|
 | 01 | [01-build-server.md](01-build-server.md) | Build the gmail-calendar MCP server (6 tools, FastMCP, stdio, uv, no send) | Server, smoke test and `.gitignore` created |
