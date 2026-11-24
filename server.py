@@ -22,6 +22,7 @@ from email.message import EmailMessage
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
+from google.auth.exceptions import RefreshError
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -62,6 +63,7 @@ def _client_secret_file(private_dir: Path) -> Path:
 
 
 def _save_token(creds: Credentials, token_path: Path) -> None:
+    token_path.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
     token_path.write_text(creds.to_json())
     os.chmod(token_path, 0o600)
     log.info("Saved refreshed token to GOOGLE_PRIVATE_DIR")
@@ -83,9 +85,15 @@ def _credentials() -> Credentials:
 
     if creds and creds.expired and creds.refresh_token:
         log.info("Refreshing Google access token")
-        creds.refresh(Request())
-        _save_token(creds, token_path)
-    elif not creds or not creds.valid:
+        try:
+            creds.refresh(Request())
+            _save_token(creds, token_path)
+        except RefreshError as exc:
+            # Revoked or expired refresh token: fall through to a fresh browser sign-in.
+            log.warning("Token refresh failed (%s); starting browser OAuth flow", exc)
+            creds = None
+
+    if not creds or not creds.valid:
         log.info("No valid token; starting browser OAuth flow")
         flow = InstalledAppFlow.from_client_secrets_file(
             str(_client_secret_file(private_dir)), SCOPES
