@@ -14,7 +14,7 @@ from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
 
 HERE = Path(__file__).resolve().parent
-GOOGLE_PRIVATE_DIR = str(Path("~/my-private").expanduser())
+GOOGLE_PRIVATE_DIR = str(Path(os.environ.get("GOOGLE_PRIVATE_DIR", "~/my-private")).expanduser())
 DAYS_AHEAD = 1
 
 
